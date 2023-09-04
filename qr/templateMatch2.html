@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Template Matching</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/opencv.js/4.5.1/opencv.min.js"></script>
+<style>
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 500px;
+  margin: 0 auto;
+}
+
+.input-image {
+  width: 100%;
+}
+
+.template-image {
+  width: 100%;
+}
+
+.results {
+  margin-top: 20px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Template Matching</h1>
+
+  <div class="input-image">
+    <label for="input-file">Input Image:</label>
+    <input type="file" id="input-file" accept="image/*">
+    <img id="input-image" />
+  </div>
+
+  <div class="template-image">
+    <label for="template-file">Template Image:</label>
+    <input type="file" id="template-file" accept="image/*">
+    <img id="template-image" />
+  </div>
+
+  <div class="results">
+    <p>The results will be displayed here.</p>
+  </div>
+
+  <button id="submit">Submit</button>
+</div>
+
+<script>
+var inputImage = document.getElementById("input-image");
+var templateImage = document.getElementById("template-image");
+var results = document.getElementById("results");
+
+var inputFile = document.getElementById("input-file");
+var templateFile = document.getElementById("template-file");
+
+var submitButton = document.getElementById("submit");
+
+inputFile.onchange = function() {
+  var file = inputFile.files[0];
+  var reader = new FileReader();
+  
+  reader.onload = function() {
+    inputImage.src = reader.result;
+  };
+  
+  reader.readAsDataURL(file);
+};
+
+templateFile.onchange = function() {
+  var file = templateFile.files[0];
+  var reader = new FileReader();
+  
+  reader.onload = function() {
+    templateImage.src = reader.result;
+  };
+  
+  reader.readAsDataURL(file);
+};
+
+submitButton.onclick = function() {
+  // Get the input image and template image data.
+  var inputImageData = inputImage.src;
+  var templateImageData = templateImage.src;
+
+  // Apply template matching using OpenCV.js.
+  var matches = cv.matchTemplate(inputImageData, templateImageData, cv.TM_CCOEFF_NORMED);
+
+  // Display the results.
+  results.innerHTML = "";
+  for (var i = 0; i < matches.length; i++) {
+    var match = matches[i];
+    var m = match.match;
+    var x = match.x;
+    var y = match.y;
+
+    results.innerHTML += "<p>Match: " + m + ", x: " + x + ", y: " + y + "</p>";
+  }
+};
+</script>
+</body>
+</html>

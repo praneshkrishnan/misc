@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!-- saved from url=(0067)https://docs.opencv.org/5.x/js_template_matching_matchTemplate.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+<style data-merge-styles="true"></style><style data-merge-styles="true"></style><style data-merge-styles="true"></style><style data-merge-styles="true"></style><style data-merge-styles="true"></style>
+<title>Template Match Example</title>
+<link href="js_example_style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h2>Template Match Example</h2>
+
+<div>
+<div class="control"><button id="tryIt">Try it</button></div>
+<textarea class="code" rows="9" cols="100" id="codeEditor" spellcheck="false"></textarea>
+<p class="err" id="errorMessage"></p>
+</div>
+<div>
+<table cellpadding="0" cellspacing="0" width="0" border="0">
+<tbody><tr>
+<td>
+<canvas id="imageCanvasInput" width="512" height="512"></canvas>
+</td>
+<td>
+<canvas id="canvasOutput"></canvas>
+</td>
+</tr>
+<tr>
+<td>
+<div class="caption">imageCanvasInput <input type="file" id="fileInput" name="file" accept="image/*"></div>
+</td>
+<td>
+<div class="caption">canvasOutput</div>
+</td>
+</tr>
+<tr>
+<td>
+<canvas id="templateCanvasInput" width="90" height="100"></canvas>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td>
+<div class="caption">templateCanvasInput <input type="file" id="templateFileInput" name="file" accept="image/*"></div>
+</td>
+<td>
+</td>
+</tr>
+</tbody></table>
+</div>
+<script async="" type="text/javascript" src="./Template Match Example_files/opencv.js.download"></script><script src="./Template Match Example_files/utils.js.download" type="text/javascript"></script>
+<script id="codeSnippet" type="text/code-snippet">
+let src = cv.imread('imageCanvasInput');
+let templ = cv.imread('templateCanvasInput');
+let dst = new cv.Mat();
+let mask = new cv.Mat();
+cv.matchTemplate(src, templ, dst, cv.TM_CCOEFF, mask);
+let result = cv.minMaxLoc(dst, mask);
+let maxPoint = result.maxLoc;
+let color = new cv.Scalar(255, 0, 0, 255);
+let point = new cv.Point(maxPoint.x + templ.cols, maxPoint.y + templ.rows);
+cv.rectangle(src, maxPoint, point, color, 2, cv.LINE_8, 0);
+cv.imshow('canvasOutput', src);
+src.delete(); dst.delete(); mask.delete();
+</script>
+<script type="text/javascript">
+let utils = new Utils('errorMessage');
+
+utils.loadCode('codeSnippet', 'codeEditor');
+utils.loadImageToCanvas('lena.jpg', 'imageCanvasInput');
+utils.loadImageToCanvas('lenaFace.png', 'templateCanvasInput');
+utils.addFileInputHandler('fileInput', 'imageCanvasInput');
+utils.addFileInputHandler('templateFileInput', 'templateCanvasInput');
+
+let tryIt = document.getElementById('tryIt');
+tryIt.addEventListener('click', () => {
+    utils.executeCode('codeEditor');
+});
+
+utils.loadOpenCv(() => {
+    tryIt.removeAttribute('disabled');
+});
+</script>
+<script defer="" src="./Template Match Example_files/v8b253dfea2ab4077af8c6f58422dfbfd1689876627854" integrity="sha512-bjgnUKX4azu3dLTVtie9u6TKqgx29RBwfj3QXYt5EKfWM/9hPSAI/4qcV5NACjwAo8UtTeWefx6Zq5PHcMm7Tg==" data-cf-beacon="{&quot;rayId&quot;:&quot;7fea354f69c313e1&quot;,&quot;version&quot;:&quot;2023.8.0&quot;,&quot;r&quot;:1,&quot;token&quot;:&quot;55698296dd8c4381b9a17117972ffe0c&quot;,&quot;si&quot;:100}" crossorigin="anonymous"></script>
